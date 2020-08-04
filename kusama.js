@@ -21,7 +21,7 @@ async function writeCSV (api, currentEraIndex, currentSessionIndex, blockNumber)
     const staking = nominatorStaking[i];
     const numTargets = staking.nominators ? staking.nominators.length : 0;
     const targets = JSON.stringify(staking.nominators);
-    file.write(`${currentEraIndex},${currentSessionIndex},${blockNumber},${staking.accountId},${staking.controllerId},${staking.stakingLedger.total},${numTargets},${targets}\n`);
+    file.write(`${currentEraIndex},${currentSessionIndex},${blockNumber},${staking.accountId},${staking.controllerId},${staking.stakingLedger.total},${numTargets},"${staking.nominators.join(`,`)}"\n`);
   }
   file.end();
   console.log(`Finished writing nominators CSV for session ${currentSessionIndex}`);
