@@ -29,9 +29,19 @@ module.exports = {
     );
     for(let i = 0; i < validatorStaking.length; i++) {
       let validator = validatorStaking[i];
+      // add identity
       const { identity } = await api.derive.accounts.info(validator.accountId);
       validator.identity = identity;
-      validator.displayName = module.exports.getDisplayName(identity);
+      validator.displayName = getDisplayName(identity);
+      // add voters
+      let voters = 0;
+      for (let i = 0, len = nominatorStaking.length; i < len; i++) {
+        const staking = nominatorStaking[i];
+        if (staking.nominators.includes(validator.accountId)) {
+          voters++
+        }
+      }
+      validator.voters = voters;
     }
 
     filePath = `${exportDir}/${network}_validators_session_${currentSessionIndex}.csv`;
