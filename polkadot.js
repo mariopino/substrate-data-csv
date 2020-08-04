@@ -60,7 +60,7 @@ function getDisplayName(identity) {
     identity.display &&
     identity.display !== ``
   ) {
-    return `${identity.displayParent} / ${identity.display}`;
+    return `${identity.displayParent.replace(/\n/g, '')} / ${identity.display.replace(/\n/g, '')}`;
   } else {
     return identity.display || ``;
   }
