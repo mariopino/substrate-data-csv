@@ -4,7 +4,7 @@ const { writeCSV } = require('./utils.js');
 
 const network = "kusama";
 const wsProvider = "wss://kusama-rpc.polkadot.io";
-const exportDir = "/var/www/susbtrate-data-csv"
+const exportDir = "/var/www/substrate-data-csv"
 
 async function main () {
   let currentKnownSessionIndex = 0;
