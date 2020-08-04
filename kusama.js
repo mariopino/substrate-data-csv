@@ -16,12 +16,12 @@ async function writeCSV (api, currentEraIndex, currentSessionIndex, blockNumber)
   let filePath = `/var/www/nominator-csv/${network}_nominators_session_${currentSessionIndex}.csv`;
   let file = fs.createWriteStream(filePath);
   file.on('error', function(err) { console.log(err) });
-  file.write(`era;session;block_number;stash_address;controller_address;bonded_amount;num_targets;targets;\n`);
+  file.write(`era,session,block_number,stash_address,controller_address,bonded_amount,num_targets,targets\n`);
   for (let i = 0, len = nominatorStaking.length; i < len; i++) {
     const staking = nominatorStaking[i];
     const numTargets = staking.nominators ? staking.nominators.length : 0;
     const targets = JSON.stringify(staking.nominators);
-    file.write(`${currentEraIndex};${currentSessionIndex};${blockNumber};${staking.accountId};${staking.controllerId};${staking.stakingLedger.total};${numTargets};${targets};\n`);
+    file.write(`${currentEraIndex},${currentSessionIndex},${blockNumber},${staking.accountId},${staking.controllerId},${staking.stakingLedger.total},${numTargets},${targets}\n`);
   }
   file.end();
   console.log(`Finished writing nominators CSV for session ${currentSessionIndex}`);
@@ -42,10 +42,10 @@ async function writeCSV (api, currentEraIndex, currentSessionIndex, blockNumber)
   filePath = `/var/www/nominator-csv/${network}_validators_session_${currentSessionIndex}.csv`;
   file = fs.createWriteStream(filePath);
   file.on('error', function(err) { console.log(err) });
-  file.write(`era;session;block_number;name;stash_address;controller_address;commission_percent;self_stake;total_stake;num_stakers;\n`);
+  file.write(`era,session,block_number,name,stash_address,controller_address,commission_percent,self_stake,total_stake,num_stakers\n`);
   for (let i = 0, len = validatorStaking.length; i < len; i++) {
     const staking = validatorStaking[i];
-    file.write(`${currentEraIndex};${currentSessionIndex};${blockNumber};${staking.displayName};${staking.accountId};${staking.controllerId};${(parseInt(staking.validatorPrefs.commission) / 10000000).toFixed(2)};${staking.exposure.own};${staking.exposure.total};${staking.exposure.others.length};\n`);
+    file.write(`${currentEraIndex},${currentSessionIndex},${blockNumber},${staking.displayName},${staking.accountId},${staking.controllerId},${(parseInt(staking.validatorPrefs.commission) / 10000000).toFixed(2)},${staking.exposure.own},${staking.exposure.total},${staking.exposure.others.length}\n`);
   }
   file.end();
   console.log(`Finished writing validators CSV for session ${currentSessionIndex}`);
