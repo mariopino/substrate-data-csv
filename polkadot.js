@@ -9,7 +9,7 @@ async function writeCSV (api, currentEraIndex, currentSessionIndex, blockNumber)
   const nominatorStaking = await Promise.all(
     nominatorAddresses.map(nominatorAddress => api.derive.staking.account(nominatorAddress))
   );
-  const filePath = `/tmp/polkadot_nominators_session_${currentSessionIndex}.csv`;
+  const filePath = `/var/www/nominator-csv/polkadot_nominators_session_${currentSessionIndex}.csv`;
   var file = fs.createWriteStream(filePath);
   file.on('error', function(err) { console.log(err) });
   file.write(`era;session;block_number;stash_address;controller_address;bonded_amount;num_targets;targets;\n`);
