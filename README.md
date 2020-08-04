@@ -6,8 +6,10 @@ This script:
 - Fetch validator and nominator data on every session change (first block of the session, except for the first execution)
 - Write CSV files
 
+See example output CSVs inside `example_csv` folder.
 
-Install:
+
+## Install:
 
 Nodejs is required.
 
@@ -18,13 +20,13 @@ npm install
 mkdir /var/www/substrate-data-csv
 ```
 
-Run for Polkadot:
+## Run for Polkadot:
 
 ```
 node polkadot.js
 ```
 
-Run for Kusama:
+## Run for Kusama:
 
 ```
 node kusama.js
