@@ -32,7 +32,7 @@ module.exports = {
       // add identity
       const { identity } = await api.derive.accounts.info(validator.accountId);
       validator.identity = identity;
-      validator.displayName = getDisplayName(identity);
+      validator.displayName = module.exports.getDisplayName(identity);
       // add voters
       let voters = 0;
       for (let i = 0, len = nominatorStaking.length; i < len; i++) {
