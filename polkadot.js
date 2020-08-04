@@ -4,7 +4,7 @@ const { writeCSV } = require('./utils.js');
 
 const network = "polkadot";
 const wsProvider = "wss://rpc.polkadot.io";
-const exportDir = "/var/www/susbtrate-data-csv"
+const exportDir = "/var/www/substrate-data-csv"
 
 async function main () {
   let currentKnownSessionIndex = 0;
