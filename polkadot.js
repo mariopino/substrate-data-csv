@@ -1,5 +1,6 @@
 fs = require('fs');
 const { ApiPromise, WsProvider } = require('@polkadot/api');
+const { writeCSV } = require('utils.js');
 
 const network = "polkadot";
 const wsProvider = "wss://rpc.polkadot.io";

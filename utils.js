@@ -47,7 +47,7 @@ export async function writeCSV(api, network, exportDir, currentEraIndex, current
   return true;
 }
 
-export function getDisplayName(identity) {
+function getDisplayName(identity) {
   if (
     identity.displayParent &&
     identity.displayParent !== `` &&
