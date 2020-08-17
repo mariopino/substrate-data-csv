@@ -1,3 +1,6 @@
+const { isHex } = require("@polkadot/util");
+const BN = require("bn.js");
+
 module.exports = {
   writeCSV: async function (api, network, exportDir, currentEraIndex, currentSessionIndex, blockNumber) {
 
@@ -56,6 +59,124 @@ module.exports = {
     console.log(`Finished writing validators CSV for session ${currentSessionIndex}`);
 
     return true;
+  },
+  writeEraCSV: async function (api, network, exportDir, eraIndex) {
+
+    //
+    // Validators CSV
+    //
+
+    // Get era validator exposures
+    const exposures = await api.query.staking.erasStakers.entries(eraIndex);
+    const eraExposures = exposures.map(([key, exposure]) => {
+      return {
+        accountId: key.args[1].toHuman(),
+        exposure: JSON.parse(JSON.stringify(exposure))
+      }
+    });
+
+    // Get era validator addresses
+    const endEraValidatorList = eraExposures.map(exposure => {
+      return exposure.accountId;
+    });
+
+    // Get validator commission for the era (in same order as endEraValidatorList)
+    const eraValidatorCommission = await Promise.all(
+      endEraValidatorList.map(accountId => api.query.staking.erasValidatorPrefs(eraIndex, accountId))
+    );
+
+    // Write validators CSV
+    console.log(`Writing validators CSV for era ${eraIndex}`);
+
+    filePath = `${exportDir}/${network}_validators_era_${eraIndex}.csv`;
+    file = fs.createWriteStream(filePath);
+    file.on('error', function(err) { console.log(err) });
+    file.write(`era,name,stash_address,commission_percent,self_stake,total_stake,stakers,num_stakers\n`);
+
+    endEraValidatorList.forEach( async (validator, index) => {
+
+      const { identity } = await api.derive.accounts.info(validator);
+      const displayName = module.exports.getDisplayName(identity);
+      const commission = (parseInt(eraValidatorCommission[index].commission) / 10000000).toFixed(2);
+      const exposure = eraExposures.find( exposure => exposure.accountId === validator).exposure;
+      file.write(`${eraIndex},${displayName},${validator},${commission},${exposure.own},${exposure.total},${exposure.others.map(({ who }) => who).join(',')},${exposure.others.length}\n`);
+      
+    })
+    file.end();
+    console.log(`Finished writing validators CSV for era ${eraIndex}`);
+    
+    //
+    // Nominators CSV
+    //
+
+    console.log(`Writing nominators CSV for session ${currentSessionIndex}`)
+    let nominatorStaking = [];
+    endEraValidatorList.forEach( async (validator, index) => {
+      
+      const exposure = eraExposures.find( exposure => exposure.accountId === validator).exposure;
+      if (exposure.others.length > 0) {
+        for (let j = 0; j < exposure.others.length; j++) {
+          let nominator = exposure.others[j];
+          if (nominatorStaking.find(nom => nom.accountId === nominator.who)) {
+            let nominatorTmp = nominatorStaking.filter(nom => {
+              return nom.accountId === nominator.who;
+            });
+            let bn;
+            if (isHex(nominator.value)) {
+              bn = new BN(
+                nominator.value.substring(2, nominator.value.length),
+                16
+              );
+            } else {
+              bn = new BN(nominator.value.toString(), 10);
+            }
+            nominatorTmp[0].totalStaked = nominatorTmp[0].totalStaked.add(bn);
+            nominatorTmp[0].nominations++;
+            nominatorTmp[0].staking.push({
+              validator: validator.accountId,
+              amount: nominator.value
+            });
+          } else {
+            let bn;
+            if (isHex(nominator.value)) {
+              bn = new BN(
+                nominator.value.substring(2, nominator.value.length),
+                16
+              );
+            } else {
+              bn = new BN(nominator.value.toString(), 10);
+            }
+            const { identity } = await api.derive.accounts.info(nominator.who);
+            const displayName = module.exports.getDisplayName(identity);
+
+            nominatorStaking.push({
+              accountId: nominator.who,
+              name: displayName,
+              totalStaked: bn,
+              nominations: 1,
+              staking: [
+                {
+                  validator: validator.accountId,
+                  amount: nominator.value
+                }
+              ],
+            });
+          }
+        }
+      }
+    });
+
+    let filePath = `${exportDir}/${network}_nominators_era_${eraIndex}.csv`;
+    let file = fs.createWriteStream(filePath);
+    file.on('error', function(err) { console.log(err) });
+    file.write(`era,stash_address,bonded_amount,num_targets,targets\n`);
+    nominatorStaking.forEach(nominator => {
+      file.write(`${eraIndex},${nominator.accountId},${nominator.totalStaked},${nominator.nominations},"${nominator.staking.map(({ validator }) => validator).join(`,`)}"\n`);
+    });
+    file.end();
+    console.log(`Finished writing nominators CSV for era ${eraIndex}`);
+
+    return;
   },
   getDisplayName: function (identity) {
     if (
