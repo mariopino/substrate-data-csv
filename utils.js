@@ -88,8 +88,8 @@ module.exports = {
     // Write validators CSV
     console.log(`Writing validators CSV for era ${eraIndex}`);
 
-    filePath = `${exportDir}/${network}_validators_era_${eraIndex}.csv`;
-    file = fs.createWriteStream(filePath);
+    let filePath = `${exportDir}/${network}_validators_era_${eraIndex}.csv`;
+    let file = fs.createWriteStream(filePath);
     file.on('error', function(err) { console.log(err) });
     file.write(`era,name,stash_address,commission_percent,self_stake,total_stake,stakers,num_stakers\n`);
 
@@ -112,7 +112,7 @@ module.exports = {
     console.log(`Writing nominators CSV for session ${currentSessionIndex}`)
     let nominatorStaking = [];
     endEraValidatorList.forEach( async (validator, index) => {
-      
+
       const exposure = eraExposures.find( exposure => exposure.accountId === validator).exposure;
       if (exposure.others.length > 0) {
         for (let j = 0; j < exposure.others.length; j++) {
@@ -166,8 +166,8 @@ module.exports = {
       }
     });
 
-    let filePath = `${exportDir}/${network}_nominators_era_${eraIndex}.csv`;
-    let file = fs.createWriteStream(filePath);
+    filePath = `${exportDir}/${network}_nominators_era_${eraIndex}.csv`;
+    file = fs.createWriteStream(filePath);
     file.on('error', function(err) { console.log(err) });
     file.write(`era,stash_address,bonded_amount,num_targets,targets\n`);
     nominatorStaking.forEach(nominator => {
