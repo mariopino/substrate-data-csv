@@ -97,7 +97,7 @@ module.exports = {
       const validator = endEraValidatorList[i];
       const { identity } = await api.derive.accounts.info(validator);
       const displayName = module.exports.getDisplayName(identity);
-      const commission = (parseInt(eraValidatorCommission[index].commission) / 10000000).toFixed(2);
+      const commission = (parseInt(eraValidatorCommission[i].commission) / 10000000).toFixed(2);
       const exposure = eraExposures.find( exposure => exposure.accountId === validator).exposure;
       file.write(`${eraIndex},${displayName},${validator},${commission},${exposure.own},${exposure.total},${exposure.others.map(({ who }) => who).join(',')},${exposure.others.length}\n`);
       
