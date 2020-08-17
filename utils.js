@@ -164,7 +164,7 @@ module.exports = {
           }
         }
       }
-    });
+    }
 
     filePath = `${exportDir}/${network}_nominators_era_${eraIndex}.csv`;
     file = fs.createWriteStream(filePath);
