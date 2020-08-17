@@ -133,7 +133,7 @@ module.exports = {
             nominatorTmp[0].totalStaked = nominatorTmp[0].totalStaked.add(bn);
             nominatorTmp[0].nominations++;
             nominatorTmp[0].staking.push({
-              validator: validator.accountId,
+              validator: validator,
               amount: nominator.value
             });
           } else {
@@ -156,7 +156,7 @@ module.exports = {
               nominations: 1,
               staking: [
                 {
-                  validator: validator.accountId,
+                  validator: validator,
                   amount: nominator.value
                 }
               ],
@@ -169,9 +169,9 @@ module.exports = {
     filePath = `${exportDir}/${network}_nominators_era_${eraIndex}.csv`;
     file = fs.createWriteStream(filePath);
     file.on('error', function(err) { console.log(err) });
-    file.write(`era,stash_address,bonded_amount,num_targets,targets\n`);
+    file.write(`era,name,stash_address,bonded_amount,num_targets,targets\n`);
     nominatorStaking.forEach(nominator => {
-      file.write(`${eraIndex},${nominator.accountId},${nominator.totalStaked},${nominator.nominations},"${nominator.staking.map(({ validator }) => validator).join(`,`)}"\n`);
+      file.write(`${eraIndex},${nominator.name},${nominator.accountId},${nominator.totalStaked},${nominator.nominations},"${nominator.staking.map(({ validator }) => validator).join(`,`)}"\n`);
     });
     file.end();
     console.log(`Finished writing nominators CSV for era ${eraIndex}`);
