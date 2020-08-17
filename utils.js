@@ -93,15 +93,15 @@ module.exports = {
     file.on('error', function(err) { console.log(err) });
     file.write(`era,name,stash_address,commission_percent,self_stake,total_stake,stakers,num_stakers\n`);
 
-    endEraValidatorList.forEach( async (validator, index) => {
-
+    for (let i = 0; i < endEraValidatorList.length; i++) {
+      const validator = endEraValidatorList[i];
       const { identity } = await api.derive.accounts.info(validator);
       const displayName = module.exports.getDisplayName(identity);
       const commission = (parseInt(eraValidatorCommission[index].commission) / 10000000).toFixed(2);
       const exposure = eraExposures.find( exposure => exposure.accountId === validator).exposure;
       file.write(`${eraIndex},${displayName},${validator},${commission},${exposure.own},${exposure.total},${exposure.others.map(({ who }) => who).join(',')},${exposure.others.length}\n`);
       
-    })
+    }
     file.end();
     console.log(`Finished writing validators CSV for era ${eraIndex}`);
     
@@ -111,8 +111,8 @@ module.exports = {
 
     console.log(`Writing nominators CSV for era ${eraIndex}`)
     let nominatorStaking = [];
-    endEraValidatorList.forEach( async (validator, index) => {
-
+    for (let i = 0; i < endEraValidatorList.length; i++) {
+      const validator = endEraValidatorList[i];
       const exposure = eraExposures.find( exposure => exposure.accountId === validator).exposure;
       if (exposure.others.length > 0) {
         for (let j = 0; j < exposure.others.length; j++) {
