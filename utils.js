@@ -109,7 +109,7 @@ module.exports = {
     // Nominators CSV
     //
 
-    console.log(`Writing nominators CSV for session ${currentSessionIndex}`)
+    console.log(`Writing nominators CSV for era ${eraIndex}`)
     let nominatorStaking = [];
     endEraValidatorList.forEach( async (validator, index) => {
 
