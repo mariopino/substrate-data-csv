@@ -1,6 +1,6 @@
 fs = require('fs');
 const { ApiPromise, WsProvider } = require('@polkadot/api');
-const { writeCSV } = require('./utils.js');
+const { writeEraCSV } = require('./utils.js');
 
 const network = "kusama";
 const wsProvider = "wss://kusama-rpc.polkadot.io";
