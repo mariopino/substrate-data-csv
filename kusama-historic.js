@@ -3,7 +3,7 @@ const { ApiPromise, WsProvider } = require('@polkadot/api');
 const { writeEraCSV } = require('./utils.js');
 
 const network = "kusama";
-const wsProvider = "wss://kusama-rpc.polkadot.io";
+const wsProvider = "wss://kusama.polkastats.io/rpc";
 const exportDir = "/var/www/substrate-data-csv/era-historic/";
 
 async function main () {

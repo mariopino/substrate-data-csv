@@ -3,7 +3,7 @@ const { ApiPromise, WsProvider } = require('@polkadot/api');
 const { writeCSV } = require('./utils.js');
 
 const network = "polkadot";
-const wsProvider = "wss://rpc.polkadot.io";
+const wsProvider = "wss://polkadot.polkastats.io/rpc";
 const exportDir = "/var/www/substrate-data-csv"
 
 async function main () {
