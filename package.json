@@ -6,9 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Mario Pino Uceda",
+  "license": "GPL-3.0",
   "dependencies": {
-    "@polkadot/api": "^1.27.1"
+    "@polkadot/api": "^1.34.1",
+    "node-fetch": ">=2.6.1"
   }
 }
