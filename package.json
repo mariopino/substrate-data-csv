@@ -1,5 +1,5 @@
 {
-  "name": "substrate-nominators-csv",
+  "name": "substrate-data-csv",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
